@@ -189,12 +189,45 @@
       opacity: 0.85;
     }
 
+    .save-button:disabled {
+      cursor: wait;
+      opacity: 0.68;
+    }
+
     .hint {
       margin: 10px 0 0;
       color: var(--muted);
       font-size: 12px;
       line-height: 1.55;
       font-family: "Pretendard", sans-serif;
+    }
+
+    .save-result {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .save-result[hidden] {
+      display: none;
+    }
+
+    .save-result img {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      -webkit-touch-callout: default !important;
+      user-select: auto !important;
+      -webkit-user-select: auto !important;
+      pointer-events: auto !important;
+    }
+
+    .save-result .hint {
+      margin-bottom: 10px;
     }
 
     .preview-wrap {
@@ -293,21 +326,32 @@
       font-family: "Pretendard", sans-serif;
     }
 
+    .profile-name-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
     .character-name {
-      margin: 0;
+      margin: 0 !important;
+      padding-bottom: 0 !important;
       font-size: 36px;
-      line-height: 1.2;
+      line-height: 1.25 !important;
       font-weight: 900;
       word-break: keep-all;
+      overflow-wrap: anywhere;
       font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
     }
 
     .subtitle {
-      margin: 10px 0 26px;
+      margin: 0 !important;
       color: var(--muted);
       font-size: 15px;
-      line-height: 1.5;
+      line-height: 1.55 !important;
       word-break: keep-all;
+      display: block;
     }
 
     .photo-frame {
@@ -342,6 +386,10 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      -webkit-touch-callout: default !important;
+      user-select: auto !important;
+      -webkit-user-select: auto !important;
+      pointer-events: auto !important;
     }
 
     .photo-placeholder {
@@ -364,12 +412,16 @@
     }
 
     .section {
-      text-align: left;
+      text-align: center !important;
       background: rgba(255, 255, 255, 0.58);
       border: 1px solid rgba(95, 80, 70, 0.13);
       border-radius: 8px;
       padding: 16px 18px;
       margin-top: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .section-title {
@@ -387,6 +439,7 @@
       line-height: 1.75;
       white-space: pre-line;
       word-break: keep-all;
+      text-align: center;
     }
 
     .quote-section {
@@ -398,6 +451,7 @@
       font-size: 16px;
       font-weight: 800;
       color: #4f4038;
+      text-align: center !important;
     }
 
     .keyword-list,
@@ -408,7 +462,7 @@
     }
 
     .keyword-list {
-      justify-content: flex-start;
+      justify-content: center !important;
     }
 
     .tags {
@@ -588,71 +642,116 @@
     @media (max-width: 940px) {
       body {
         padding: 22px 14px;
+        overflow-x: hidden;
       }
 
       .app {
+        width: 100%;
         grid-template-columns: 1fr;
       }
 
       .editor {
         position: static;
+        width: 100%;
+      }
+
+      .preview-wrap {
+        width: 100%;
+        padding: 12px;
+        overflow: visible;
       }
 
       .profile-card {
+        width: 100%;
         min-height: auto;
-        padding: 34px 24px;
+        padding: 34px 22px 30px;
+      }
+
+      .profile-card::before {
+        inset: 14px;
+      }
+
+      .profile-card::after {
+        display: none;
+      }
+
+      .corner-decoration {
+        width: 38px;
+        height: 38px;
+      }
+
+      .corner-decoration.top-left {
+        left: 18px;
+        top: 18px;
+      }
+
+      .corner-decoration.top-right {
+        right: 18px;
+        top: 18px;
+      }
+
+      .corner-decoration.bottom-left {
+        left: 18px;
+        bottom: 18px;
+      }
+
+      .corner-decoration.bottom-right {
+        right: 18px;
+        bottom: 18px;
+      }
+
+      .profile-name-container {
+        gap: 16px;
+        margin: 0 auto 28px;
+        width: 100%;
       }
 
       .character-name {
         font-size: 29px;
+        max-width: 100%;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
       }
-    }
 
-    /* --- 모바일 이미지 저장 및 텍스트 겹침 해결 --- */
-    img {
-      -webkit-touch-callout: default !important;
-      user-select: auto !important;
-      -webkit-user-select: auto !important;
-      pointer-events: auto !important;
-    }
+      .subtitle {
+        font-size: 15px;
+        max-width: 100%;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
 
-    /* 이름과 부제 컨테이너: 겹침 방지 */
-    .profile-name-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+      .photo-frame {
+        width: min(330px, 92%);
+        margin-bottom: 18px;
+      }
 
-    .character-name {
-      margin: 0 !important;
-      line-height: 1.2 !important;
-      padding-bottom: 8px;
-    }
+      .profile-card.ratio-square .photo-frame {
+        width: min(330px, 92%);
+      }
 
-    .subtitle {
-      margin: 0 !important;
-      line-height: 1.4;
-      word-break: keep-all;
-      display: block;
-    }
+      .profile-card.ratio-portrait .photo-frame {
+        width: min(280px, 82%);
+      }
 
-    /* --- 오른쪽 섹션 중앙 정렬 전용 설정 --- */
-    .section {
-      text-align: center !important;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 16px 18px;
-    }
+      .intro-block,
+      .section p,
+      .keyword,
+      .tag {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
 
-    .keyword-list {
-      justify-content: center !important;
-    }
+      .section {
+        width: 100%;
+      }
 
-    .quote-section p {
-      text-align: center !important;
+      .keyword-list,
+      .tags {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -733,7 +832,12 @@
       </div>
 
       <button class="save-button" id="saveButton" type="button">이미지로 저장</button>
-      <p class="hint">저장 품질을 위해 3배 해상도로 PNG를 생성합니다.</p>
+      <p class="hint">PC에서는 자동 다운로드되고, 모바일에서는 저장용 이미지를 만든 뒤 꾹 눌러 저장합니다.</p>
+
+      <div class="save-result" id="saveResult" hidden>
+        <p class="hint">모바일에서는 아래 이미지를 1~2초 꾹 눌러서 저장하세요.</p>
+        <img id="savedImagePreview" alt="저장용 캐릭터 소개 이미지" />
+      </div>
     </section>
 
     <section class="preview-wrap">
@@ -804,6 +908,8 @@
     const themeInput = document.getElementById("themeInput");
     const themeTextInput = document.getElementById("themeTextInput");
     const saveButton = document.getElementById("saveButton");
+    const saveResult = document.getElementById("saveResult");
+    const savedImagePreview = document.getElementById("savedImagePreview");
 
     const namePreview = document.getElementById("namePreview");
     const subtitlePreview = document.getElementById("subtitlePreview");
@@ -890,27 +996,57 @@
 
     async function saveAsImage() {
       saveButton.disabled = true;
-      saveButton.textContent = "저장 중...";
+      saveButton.textContent = "이미지 생성 중...";
 
       try {
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
         }
 
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         const canvas = await html2canvas(profileCard, {
           backgroundColor: styleSelect.value === "status" ? "#0f131a" : "#ffffff",
-          scale: 3,
+          scale: isMobile ? 2 : 3,
           useCORS: true,
-          imageTimeout: 15000
+          allowTaint: true,
+          imageTimeout: 15000,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: document.documentElement.scrollWidth,
+          windowHeight: document.documentElement.scrollHeight
         });
 
-        const link = document.createElement("a");
         const safeName = nameInput.value.trim().replace(/[\\/:*?"<>|]/g, "") || "character";
-        link.download = `${safeName}-profile.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+        const blob = await new Promise((resolve) => {
+          canvas.toBlob(resolve, "image/png");
+        });
+
+        if (!blob) {
+          throw new Error("이미지 변환 실패");
+        }
+
+        const imageUrl = URL.createObjectURL(blob);
+
+        if (savedImagePreview.dataset.objectUrl) {
+          URL.revokeObjectURL(savedImagePreview.dataset.objectUrl);
+        }
+
+        savedImagePreview.dataset.objectUrl = imageUrl;
+        savedImagePreview.src = imageUrl;
+        saveResult.hidden = false;
+
+        if (!isMobile) {
+          const link = document.createElement("a");
+          link.download = `${safeName}-profile.png`;
+          link.href = imageUrl;
+          link.click();
+        }
+
+        setTimeout(() => {
+          savedImagePreview.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 100);
       } catch (error) {
-        alert("이미지 저장에 실패했어요. 사진을 다시 첨부한 뒤 시도해보세요.");
+        alert("이미지 생성에 실패했어요. 사진을 다시 첨부한 뒤 시도해보세요.");
       } finally {
         saveButton.disabled = false;
         saveButton.textContent = "이미지로 저장";
