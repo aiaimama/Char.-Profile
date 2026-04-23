@@ -17,13 +17,14 @@
       box-sizing: border-box;
     }
 
-    /* 커스텀 스크롤바 */
     ::-webkit-scrollbar {
       width: 8px;
     }
+
     ::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0.05);
     }
+
     ::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, 0.2);
       border-radius: 4px;
@@ -45,7 +46,6 @@
     body {
       margin: 0;
       min-height: 100vh;
-      /* 전체 기본 폰트를 고운돋움으로 변경 */
       font-family: "Gowun Dodum", "Pretendard", "Noto Sans KR", sans-serif;
       background: linear-gradient(135deg, var(--page-bg-1) 0%, var(--page-bg-2) 52%, var(--page-bg-3) 100%);
       color: var(--ink);
@@ -56,7 +56,6 @@
       transition: background 0.5s ease;
     }
 
-    /* 상태창 테마일 때 전체 배경 어둡게 */
     body.theme-status-active {
       --page-bg-1: #0f131a;
       --page-bg-2: #161b22;
@@ -99,7 +98,6 @@
       margin: 0 0 18px;
       font-size: 22px;
       font-weight: 800;
-      /* 제목은 프리텐다드 유지 */
       font-family: "Pretendard", sans-serif;
     }
 
@@ -206,7 +204,6 @@
       overflow: auto;
     }
 
-    /* 베이스 프로필 카드 */
     .profile-card {
       width: min(580px, 100%);
       min-height: 920px;
@@ -253,10 +250,33 @@
       z-index: 0;
     }
 
-    .corner-decoration.top-left { left: 28px; top: 28px; border-top: 2px solid; border-left: 2px solid; }
-    .corner-decoration.top-right { right: 28px; top: 28px; border-top: 2px solid; border-right: 2px solid; }
-    .corner-decoration.bottom-left { left: 28px; bottom: 28px; border-bottom: 2px solid; border-left: 2px solid; }
-    .corner-decoration.bottom-right { right: 28px; bottom: 28px; border-bottom: 2px solid; border-right: 2px solid; }
+    .corner-decoration.top-left {
+      left: 28px;
+      top: 28px;
+      border-top: 2px solid;
+      border-left: 2px solid;
+    }
+
+    .corner-decoration.top-right {
+      right: 28px;
+      top: 28px;
+      border-top: 2px solid;
+      border-right: 2px solid;
+    }
+
+    .corner-decoration.bottom-left {
+      left: 28px;
+      bottom: 28px;
+      border-bottom: 2px solid;
+      border-left: 2px solid;
+    }
+
+    .corner-decoration.bottom-right {
+      right: 28px;
+      bottom: 28px;
+      border-bottom: 2px solid;
+      border-right: 2px solid;
+    }
 
     .card-content {
       position: relative;
@@ -273,7 +293,6 @@
       font-family: "Pretendard", sans-serif;
     }
 
-    /* 캐릭터 이름: 기존 폰트 설정 유지 */
     .character-name {
       margin: 0;
       font-size: 36px;
@@ -295,7 +314,7 @@
       width: min(352px, 86%);
       margin: 0 auto 16px;
       border: 8px solid rgba(255, 255, 255, 0.9);
-      border-radius: 8px; /* 기본 테두리 둥글게 */
+      border-radius: 8px;
       box-shadow: 0 16px 34px rgba(55, 42, 34, 0.2);
       background: #efe8e2;
       overflow: hidden;
@@ -388,8 +407,14 @@
       gap: 7px;
     }
 
-    .keyword-list { justify-content: flex-start; }
-    .tags { justify-content: center; margin-top: 22px; }
+    .keyword-list {
+      justify-content: flex-start;
+    }
+
+    .tags {
+      justify-content: center;
+      margin-top: 22px;
+    }
 
     .keyword,
     .tag {
@@ -413,7 +438,6 @@
       font-family: "Pretendard", sans-serif;
     }
 
-    /* --- 1. 클래식 스타일 --- */
     .profile-card.style-classic {
       --muted: #74645b;
       --line: rgba(116, 91, 75, 0.25);
@@ -421,10 +445,16 @@
         linear-gradient(rgba(255, 252, 248, 0.8), rgba(255, 252, 248, 0.8)),
         var(--theme-color);
     }
-    .profile-card.style-classic .character-name { font-family: "Gowun Batang", "Noto Serif KR", serif; font-weight: 700; }
-    .profile-card.style-classic .style-label::before { content: "Classic Profile"; }
 
-    /* --- 2. 비밀문서 스타일 --- */
+    .profile-card.style-classic .character-name {
+      font-family: "Gowun Batang", "Noto Serif KR", serif;
+      font-weight: 700;
+    }
+
+    .profile-card.style-classic .style-label::before {
+      content: "Classic Profile";
+    }
+
     .profile-card.style-secret {
       --muted: #5e5546;
       --line: rgba(74, 64, 48, 0.3);
@@ -434,6 +464,7 @@
         var(--theme-color);
       border-color: rgba(67, 55, 40, 0.28);
     }
+
     .profile-card.style-secret::before {
       content: "TOP SECRET";
       position: absolute;
@@ -453,14 +484,28 @@
       border-radius: 4px;
       font-family: "Pretendard", sans-serif;
     }
-    .profile-card.style-secret .style-label::before { content: "Confidential File"; }
-    .profile-card.style-secret .character-name { font-family: "Noto Serif KR", serif; font-weight: 900; }
+
+    .profile-card.style-secret .style-label::before {
+      content: "Confidential File";
+    }
+
+    .profile-card.style-secret .character-name {
+      font-family: "Noto Serif KR", serif;
+      font-weight: 900;
+    }
+
     .profile-card.style-secret .section,
     .profile-card.style-secret .keyword,
-    .profile-card.style-secret .tag { background: rgba(255, 249, 235, 0.52); border-color: rgba(74, 64, 48, 0.2); }
-    .profile-card.style-secret .photo-frame { border-color: rgba(249, 242, 222, 0.92); filter: saturate(0.88) contrast(1.04); }
+    .profile-card.style-secret .tag {
+      background: rgba(255, 249, 235, 0.52);
+      border-color: rgba(74, 64, 48, 0.2);
+    }
 
-    /* --- 3. 웹소설 상태창 스타일 --- */
+    .profile-card.style-secret .photo-frame {
+      border-color: rgba(249, 242, 222, 0.92);
+      filter: saturate(0.88) contrast(1.04);
+    }
+
     .profile-card.style-status {
       --muted: #6a9bd8;
       --line: rgba(0, 240, 255, 0.4);
@@ -470,100 +515,145 @@
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.05);
       color: #c9d1d9;
     }
-    .profile-card.style-status::after { display: none; }
-    .profile-card.style-status .corner-decoration { border-color: #00f0ff; opacity: 0.8; box-shadow: 0 0 8px rgba(0,240,255,0.4); }
-    
+
+    .profile-card.style-status::after {
+      display: none;
+    }
+
+    .profile-card.style-status .corner-decoration {
+      border-color: #00f0ff;
+      opacity: 0.8;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+    }
+
     .profile-card.style-status .style-label::before {
       content: "SYSTEM ALERT //";
       color: #ffd700;
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-      font-family: 'Orbit', sans-serif;
+      font-family: "Orbit", sans-serif;
     }
+
     .profile-card.style-status .character-name {
       color: #00f0ff;
       text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
       font-family: "Pretendard", sans-serif;
       font-weight: 900;
     }
+
     .profile-card.style-status .photo-frame {
       border: 2px solid #00f0ff;
       background: rgba(0, 0, 0, 0.5);
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
     }
-    .profile-card.style-status .photo-placeholder { color: #00f0ff; opacity: 0.7; }
-    
+
+    .profile-card.style-status .photo-placeholder {
+      color: #00f0ff;
+      opacity: 0.7;
+    }
+
     .profile-card.style-status .section {
       background: rgba(0, 20, 35, 0.4);
       border-color: rgba(0, 240, 255, 0.2);
     }
+
     .profile-card.style-status .section-title {
       color: #ffd700;
       text-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
-      font-family: 'Orbit', sans-serif;
+      font-family: "Orbit", sans-serif;
     }
+
     .profile-card.style-status .section p,
     .profile-card.style-status .intro-block {
       color: #e6edf3;
     }
+
     .profile-card.style-status .quote-section {
       background: rgba(0, 240, 255, 0.05);
       border: 1px dashed rgba(0, 240, 255, 0.4);
     }
-    .profile-card.style-status .quote-section p { color: #00f0ff; }
-    
+
+    .profile-card.style-status .quote-section p {
+      color: #00f0ff;
+    }
+
     .profile-card.style-status .keyword,
     .profile-card.style-status .tag {
       background: rgba(0, 240, 255, 0.1);
       border-color: rgba(0, 240, 255, 0.4);
       color: #00f0ff;
-      box-shadow: 0 0 5px rgba(0,240,255,0.2);
+      box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
       font-family: "Pretendard", sans-serif;
     }
 
     @media (max-width: 940px) {
-      body { padding: 22px 14px; }
-      .app { grid-template-columns: 1fr; }
-      .editor { position: static; }
-      .profile-card { min-height: auto; padding: 34px 24px; }
-      .character-name { font-size: 29px; }
+      body {
+        padding: 22px 14px;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .editor {
+        position: static;
+      }
+
+      .profile-card {
+        min-height: auto;
+        padding: 34px 24px;
+      }
+
+      .character-name {
+        font-size: 29px;
+      }
     }
-    /* 이미지 저장 활성화 및 터치 설정 */
-img {
-    -webkit-touch-callout: default !important; /* iOS 저장 메뉴 활성화 */
-    user-select: auto !important;             /* 선택 가능하게 변경 */
-    -webkit-user-select: auto !important;
-}
 
-/* 이름과 부제 겹침 해결 (모바일 대응) */
-.profile-name-container {
-    display: flex;
-    flex-direction: column; /* 세로로 배치 */
-    gap: 4px;              /* 이름과 부제 사이 간격 */
-}
+    /* --- 모바일 이미지 저장 및 텍스트 겹침 해결 --- */
+    img {
+      -webkit-touch-callout: default !important;
+      user-select: auto !important;
+      -webkit-user-select: auto !important;
+      pointer-events: auto !important;
+    }
 
-.subtitle {
-    line-height: 1.4;      /* 줄간격 확보 */
-    word-break: keep-all;  /* 단어 단위 끊김 방지 */
-    margin-top: 5px;       /* 이름 아래 여백 */
-}
-    /* 오른쪽 콘텐츠 영역 중앙 정렬 */
-.right-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;    /* 가로축 중앙 */
-    justify-content: center; /* 세로축 중앙 (필요시) */
-    text-align: center;     /* 텍스트 자체 중앙 정렬 */
-}
+    /* 이름과 부제 컨테이너: 겹침 방지 */
+    .profile-name-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
 
-/* 각 항목(성격, 관계, 코멘트) 개별 정렬 */
-.personality-box, .relationship-box, .author-comment {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 15px;    /* 항목 간 간격 */
-}
+    .character-name {
+      margin: 0 !important;
+      line-height: 1.2 !important;
+      padding-bottom: 8px;
+    }
+
+    .subtitle {
+      margin: 0 !important;
+      line-height: 1.4;
+      word-break: keep-all;
+      display: block;
+    }
+
+    /* --- 오른쪽 섹션 중앙 정렬 전용 설정 --- */
+    .section {
+      text-align: center !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 18px;
+    }
+
+    .keyword-list {
+      justify-content: center !important;
+    }
+
+    .quote-section p {
+      text-align: center !important;
+    }
   </style>
 </head>
 <body>
@@ -655,8 +745,11 @@ img {
 
         <div class="card-content">
           <p class="style-label" aria-hidden="true"></p>
-          <h2 class="character-name" id="namePreview">캐릭터 이름</h2>
-          <p class="subtitle" id="subtitlePreview">부제를 입력하세요</p>
+
+          <div class="profile-name-container">
+            <h2 class="character-name" id="namePreview">캐릭터 이름</h2>
+            <p class="subtitle" id="subtitlePreview">부제를 입력하세요</p>
+          </div>
 
           <div class="photo-frame" id="photoFrame">
             <div class="photo-placeholder" id="photoPlaceholder">
@@ -746,7 +839,7 @@ img {
     function updateStyle() {
       profileCard.classList.remove("style-classic", "style-secret", "style-status");
       profileCard.classList.add(`style-${styleSelect.value}`);
-      
+
       if (styleSelect.value === "status") {
         document.body.classList.add("theme-status-active");
       } else {
