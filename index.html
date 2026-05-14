@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>캐릭터 소개창 제작기</title>
+
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@500;700;900&family=Orbit&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --page-bg-1: #f3eee8;
+      --page-bg-2: #dfe9ec;
+      --page-bg-3: #f4ddd7;
+      --ink: #2e2a27;
+      --muted: #78685f;
+      --line: rgba(75, 60, 52, 0.18);
+      --panel: rgba(255, 255, 255, 0.78);
+      --paper: #fffaf7;
+      --accent: #b98570;
+      --theme-color: #d9b7a8;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--page-bg-1) 0%, var(--page-bg-2) 52%, var(--page-bg-3) 100%);
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+    }
+
+    body.theme-status-active {
+      --page-bg-1: #0f131a;
+      --page-bg-2: #161b22;
+      --page-bg-3: #0d1117;
+      --panel: rgba(20, 25, 35, 0.88);
+      --paper: #1c2128;
+      --ink: #e6edf3;
+      --accent: #00f0ff;
+    }
+
+    .app {
+      width: min(1220px, 100%);
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .editor,
+    .preview-wrap {
+      background: var(--panel);
+      border: 1px solid rgba(90, 75, 66, 0.16);
+      border-radius: 8px;
+      box-shadow: 0 18px 45px rgba(55, 45, 38, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    body.theme-status-active .editor,
+    body.theme-status-active .preview-wrap {
+      border-color: rgba(0, 240, 255, 0.2);
+    }
+
+    .editor {
+      padding: 22px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .editor h1 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5a5049;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+      font: inherit;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d8ccc4;
+      border-radius: 6px;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 78px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(166, 108, 85, 0.14);
+    }
+
+    input[type="file"] {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .color-row {
+      display: grid;
+      grid-template-columns: 1fr 58px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="color"] {
+      height: 44px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .save-button {
+      width: 100%;
+      border: 0;
+      border-radius: 6px;
+      background: #2f2925;
+      color: white;
+      padding: 13px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .save-button:hover {
+      background: #4a3b33;
+    }
+
+    .save-button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .hint {
+      margin: 10px 0 0;
+      color: #7a6b62;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .preview-wrap {
+      padding: 28px;
+      display: flex;
+      justify-content: center;
+      overflow: auto;
+    }
+
+    .profile-card {
+      width: min(580px, 100%);
+      min-height: 920px;
+      padding: 40px 36px 34px;
+      border-radius: 8px;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.77), rgba(255, 255, 255, 0.77)),
+        var(--theme-color);
+      border: 1px solid rgba(70, 55, 48, 0.16);
+      box-shadow: 0 24px 60px rgba(48, 38, 32, 0.18);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      color: #2d2926;
+    }
+
+    .profile-card::before,
+    .profile-card::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .profile-card::before {
+      inset: 20px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+    }
+
+    .profile-card::after {
+      left: 36px;
+      right: 36px;
+      top: 116px;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .style-label {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .character-name {
+      margin: 0;
+      font-size: 36px;
+      line-height: 1.2;
+      font-weight: 900;
+      word-break: keep-all;
+    }
+
+    .subtitle {
+      margin: 10px 0 26px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+      word-break: keep-all;
+    }
+
+    .photo-frame {
+      width: min(352px, 86%);
+      margin: 0 auto 16px;
+      border: 8px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 16px 34px rgba(55, 42, 34, 0.2);
+      background: #efe8e2;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .profile-card.ratio-square .photo-frame {
+      aspect-ratio: 1 / 1;
+      width: min(372px, 88%);
+    }
+
+    .profile-card.ratio-portrait {
+      width: min(550px, 100%);
+    }
+
+    .profile-card.ratio-portrait .photo-frame {
+      aspect-ratio: 832 / 1216;
+      width: min(332px, 84%);
+    }
+
+    .photo-frame.frame-rounded {
+      border-radius: 8px;
+    }
+
+    .photo-frame.frame-square {
+      border-radius: 0;
+    }
+
+    .photo-frame.frame-circle {
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      width: min(344px, 84%);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-placeholder {
+      padding: 24px;
+      color: #8d7d72;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .photo-caption {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .intro-block {
+      margin: 0 auto 15px;
+      max-width: 460px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.75;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+
+    .section {
+      text-align: left;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(95, 80, 70, 0.13);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 13px;
+    }
+
+    .section-title {
+      margin: 0 0 9px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #6b554b;
+      letter-spacing: 0;
+    }
+
+    .section p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.75;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+
+    .quote-section {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    .quote-section p {
+      font-size: 16px;
+      font-weight: 800;
+      color: #4f4038;
+    }
+
+    .keyword-list,
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .keyword-list {
+      justify-content: flex-start;
+    }
+
+    .tags {
+      justify-content: center;
+      margin-top: 22px;
+    }
+
+    .keyword,
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.64);
+      border: 1px solid rgba(95, 80, 70, 0.16);
+      color: #67564f;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .platform-name {
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .profile-card.style-classic {
+      --muted: #74645b;
+      --line: rgba(116, 91, 75, 0.25);
+      background:
+        linear-gradient(rgba(255, 252, 248, 0.8), rgba(255, 252, 248, 0.8)),
+        var(--theme-color);
+    }
+
+    .profile-card.style-classic .character-name {
+      font-family: "Gowun Batang", "Noto Serif KR", serif;
+      font-weight: 700;
+    }
+
+    .profile-card.style-classic .style-label::before {
+      content: "Classic Profile";
+    }
+
+    .profile-card.style-secret {
+      --muted: #936078;
+      --line: rgba(184, 125, 151, 0.32);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.72) 0 16%, transparent 34%),
+        radial-gradient(circle at 8% 12%, rgba(255, 224, 238, 0.64) 0 16%, transparent 34%),
+        radial-gradient(circle at 92% 14%, rgba(255, 243, 198, 0.5) 0 13%, transparent 30%),
+        linear-gradient(135deg, rgba(255, 247, 251, 0.9), rgba(250, 237, 249, 0.88) 46%, rgba(255, 248, 229, 0.92)),
+        var(--theme-color);
+      border: 1px solid rgba(188, 133, 158, 0.42);
+      box-shadow: 0 28px 70px rgba(112, 67, 88, 0.24), inset 0 0 0 5px rgba(255, 255, 255, 0.36);
+    }
+
+    .profile-card.style-secret::before {
+      inset: 18px;
+      border: 1px solid rgba(184, 125, 151, 0.28);
+      box-shadow: inset 0 0 0 1px rgba(255, 247, 216, 0.7);
+    }
+
+    .profile-card.style-secret::after {
+      left: 90px;
+      right: 90px;
+      top: 118px;
+      height: 12px;
+      border-top: 1px solid rgba(188, 133, 158, 0.28);
+      border-bottom: 1px solid rgba(188, 133, 158, 0.18);
+      background: linear-gradient(90deg, transparent, rgba(194, 139, 164, 0.34), rgba(236, 194, 118, 0.38), rgba(194, 139, 164, 0.34), transparent);
+    }
+
+    .profile-card.style-secret .style-label::before {
+      content: "Romance Fantasy";
+      color: #b27a91;
+    }
+
+    .profile-card.style-secret .character-name {
+      font-family: "Noto Serif KR", serif;
+      font-weight: 900;
+      color: #6f3f59;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, 0.72), 0 0 18px rgba(216, 154, 181, 0.35);
+    }
+
+    .profile-card.style-secret .section,
+    .profile-card.style-secret .keyword,
+    .profile-card.style-secret .tag {
+      background: rgba(255, 255, 255, 0.66);
+      border-color: rgba(188, 133, 158, 0.28);
+      box-shadow: 0 10px 26px rgba(112, 67, 88, 0.08);
+    }
+
+    .profile-card.style-secret .photo-frame {
+      border-color: rgba(255, 248, 252, 0.96);
+      box-shadow: 0 18px 38px rgba(130, 75, 104, 0.22), 0 0 0 1px rgba(184, 125, 151, 0.34), 0 0 0 7px rgba(255, 244, 249, 0.58);
+      filter: saturate(1.04) contrast(1.02);
+    }
+
+    .profile-card.style-secret .photo-caption,
+    .profile-card.style-secret .section-title {
+      color: #875873;
+    }
+
+    .profile-card.style-secret .quote-section p {
+      color: #74415e;
+    }
+
+    .profile-card.style-status {
+      --muted: #8ab9f4;
+      --line: rgba(0, 240, 255, 0.5);
+      background: rgba(13, 17, 23, 0.94);
+      border: 1px solid rgba(0, 240, 255, 0.7);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.16), inset 0 0 22px rgba(0, 240, 255, 0.06);
+      color: #e6edf3;
+    }
+
+    .profile-card.style-status::before {
+      inset: 16px;
+      border: 1px solid rgba(0, 240, 255, 0.68);
+      border-radius: 6px;
+      box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.22);
+    }
+
+    .profile-card.style-status::after {
+      display: none;
+    }
+
+    .profile-card.style-status .style-label::before {
+      content: "SYSTEM ALERT //";
+      color: #ffe600;
+      text-shadow: 0 0 8px rgba(255, 230, 0, 0.78);
+      font-family: "Orbit", sans-serif;
+    }
+
+    .profile-card.style-status .character-name {
+      color: #00f0ff;
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.62);
+    }
+
+    .profile-card.style-status .subtitle,
+    .profile-card.style-status .photo-caption,
+    .profile-card.style-status .platform-name {
+      color: #8ab9f4;
+    }
+
+    .profile-card.style-status .photo-frame {
+      border: 2px solid #00f0ff;
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.28);
+    }
+
+    .profile-card.style-status .photo-placeholder {
+      color: #00f0ff;
+      opacity: 0.78;
+    }
+
+    .profile-card.style-status .intro-block,
+    .profile-card.style-status .section p {
+      color: #e6edf3;
+    }
+
+    .profile-card.style-status .section {
+      background: rgba(0, 20, 35, 0.42);
+      border-color: rgba(0, 240, 255, 0.24);
+    }
+
+    .profile-card.style-status .section-title {
+      color: #ffe600;
+      text-shadow: 0 0 6px rgba(255, 230, 0, 0.55);
+      font-family: "Orbit", sans-serif;
+    }
+
+    .profile-card.style-status .quote-section {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px dashed rgba(0, 240, 255, 0.5);
+    }
+
+    .profile-card.style-status .quote-section p,
+    .profile-card.style-status .keyword,
+    .profile-card.style-status .tag {
+      color: #00f0ff;
+    }
+
+    .profile-card.style-status .keyword,
+    .profile-card.style-status .tag {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: rgba(0, 240, 255, 0.46);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.18);
+    }
+
+    @media (max-width: 940px) {
+      body {
+        padding: 22px 14px;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .editor {
+        position: static;
+      }
+
+      .profile-card {
+        min-height: auto;
+        padding: 34px 24px;
+      }
+
+      .character-name {
+        font-size: 29px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="editor">
+      <h1>캐릭터 소개창 제작기</h1>
+
+      <div class="field">
+        <label for="styleSelect">카드 스타일</label>
+        <select id="styleSelect">
+          <option value="classic">클래식</option>
+          <option value="secret">로판스타일</option>
+          <option value="status">상태창</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="ratioSelect">프로필 사진 규격</label>
+        <select id="ratioSelect">
+          <option value="square">1024 x 1024</option>
+          <option value="portrait">832 x 1216</option>
+        </select>
+        <p class="hint">선택한 규격에 맞춰 사진 프레임과 카드 폭이 조정됩니다.</p>
+      </div>
+
+      <div class="field">
+        <label for="nameInput">캐릭터 이름</label>
+        <input id="nameInput" type="text" value="루시엔 바일" />
+      </div>
+
+      <div class="field">
+        <label for="subtitleInput">짧은 부제</label>
+        <input id="subtitleInput" type="text" value="달빛 아래의 검은 기사" />
+      </div>
+
+      <div class="field">
+        <label for="imageInput">캐릭터 사진 첨부</label>
+        <input id="imageInput" type="file" accept="image/*" />
+        <p class="hint">정사각형은 1024x1024, 세로형은 832x1216 이미지를 추천합니다.</p>
+      </div>
+
+      <div class="field">
+        <label for="captionInput">사진 캡션</label>
+        <input id="captionInput" type="text" value="No. 017 / Northern Blade" />
+      </div>
+
+      <div class="field">
+        <label for="introInput">짧은 캐릭터 소개</label>
+        <textarea id="introInput">침묵이 익숙한 북부 출신 검사. 무뚝뚝해 보이지만 약속만큼은 끝까지 지킨다.</textarea>
+      </div>
+
+      <div class="field">
+        <label for="keywordInput">성격 키워드</label>
+        <input id="keywordInput" type="text" value="무뚝뚝함, 책임감, 경계심, 다정함을 숨김" />
+      </div>
+
+      <div class="field">
+        <label for="quoteInput">대사 샘플</label>
+        <textarea id="quoteInput">"...뒤로 물러나. 이번엔 내가 앞에 선다."</textarea>
+      </div>
+
+      <div class="field">
+        <label for="relationInput">관계 성향</label>
+        <textarea id="relationInput">느린 친밀감 선호. 대립 관계, 동료 관계, 보호자 같은 관계를 환영합니다.</textarea>
+      </div>
+
+      <div class="field">
+        <label for="commentInput">작가 코멘트</label>
+        <textarea id="commentInput">천천히 가까워지는 관계를 선호합니다. 일상, 사건물, 감정선 위주의 롤플레이를 좋아해요.</textarea>
+      </div>
+
+      <div class="field">
+        <label for="tagInput">태그</label>
+        <input id="tagInput" type="text" value="냉정함, 상처많음, 느린관계, 기사" />
+      </div>
+
+      <div class="field">
+        <label for="platformInput">플랫폼 이름</label>
+        <input id="platformInput" type="text" value="AI채팅 리수 달글" />
+      </div>
+
+      <div class="field">
+        <label for="frameSelect">사진 프레임</label>
+        <select id="frameSelect">
+          <option value="rounded">부드러운 사각형</option>
+          <option value="square">각진 사각형</option>
+          <option value="circle">원형</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="themeInput">테마 색상</label>
+        <div class="color-row">
+          <input id="themeTextInput" type="text" value="#d9b7a8" />
+          <input id="themeInput" type="color" value="#d9b7a8" />
+        </div>
+      </div>
+
+      <button class="save-button" id="saveButton" type="button">이미지로 저장</button>
+      <p class="hint">저장 품질을 위해 3배 해상도로 PNG를 생성합니다. 사진은 카드 규격보다 큰 원본을 쓰면 더 선명합니다.</p>
+    </section>
+
+    <section class="preview-wrap">
+      <article class="profile-card style-classic ratio-square" id="profileCard">
+        <div class="card-content">
+          <p class="style-label" aria-hidden="true"></p>
+          <h2 class="character-name" id="namePreview">루시엔 바일</h2>
+          <p class="subtitle" id="subtitlePreview">달빛 아래의 검은 기사</p>
+
+          <div class="photo-frame frame-rounded" id="photoFrame">
+            <div class="photo-placeholder" id="photoPlaceholder">
+              캐릭터 사진을 첨부하면<br />
+              선택한 규격에 맞춰 표시됩니다
+            </div>
+            <img id="photoPreview" alt="캐릭터 사진" hidden />
+          </div>
+
+          <p class="photo-caption" id="captionPreview">No. 017 / Northern Blade</p>
+
+          <p class="intro-block" id="introPreview">침묵이 익숙한 북부 출신 검사. 무뚝뚝해 보이지만 약속만큼은 끝까지 지킨다.</p>
+
+          <div class="section">
+            <h3 class="section-title">Personality</h3>
+            <div class="keyword-list" id="keywordPreview"></div>
+          </div>
+
+          <div class="section quote-section">
+            <h3 class="section-title">Line</h3>
+            <p id="quotePreview">"...뒤로 물러나. 이번엔 내가 앞에 선다."</p>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Relationship</h3>
+            <p id="relationPreview">느린 친밀감 선호. 대립 관계, 동료 관계, 보호자 같은 관계를 환영합니다.</p>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Author Comment</h3>
+            <p id="commentPreview">천천히 가까워지는 관계를 선호합니다. 일상, 사건물, 감정선 위주의 롤플레이를 좋아해요.</p>
+          </div>
+
+          <div class="tags" id="tagPreview"></div>
+          <p class="platform-name" id="platformPreview">AI채팅 리수 달글</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const profileCard = document.getElementById("profileCard");
+    const photoFrame = document.getElementById("photoFrame");
+
+    const styleSelect = document.getElementById("styleSelect");
+    const ratioSelect = document.getElementById("ratioSelect");
+    const frameSelect = document.getElementById("frameSelect");
+    const nameInput = document.getElementById("nameInput");
+    const subtitleInput = document.getElementById("subtitleInput");
+    const imageInput = document.getElementById("imageInput");
+    const captionInput = document.getElementById("captionInput");
+    const introInput = document.getElementById("introInput");
+    const keywordInput = document.getElementById("keywordInput");
+    const quoteInput = document.getElementById("quoteInput");
+    const relationInput = document.getElementById("relationInput");
+    const commentInput = document.getElementById("commentInput");
+    const tagInput = document.getElementById("tagInput");
+    const platformInput = document.getElementById("platformInput");
+    const themeInput = document.getElementById("themeInput");
+    const themeTextInput = document.getElementById("themeTextInput");
+    const saveButton = document.getElementById("saveButton");
+
+    const namePreview = document.getElementById("namePreview");
+    const subtitlePreview = document.getElementById("subtitlePreview");
+    const photoPreview = document.getElementById("photoPreview");
+    const photoPlaceholder = document.getElementById("photoPlaceholder");
+    const captionPreview = document.getElementById("captionPreview");
+    const introPreview = document.getElementById("introPreview");
+    const keywordPreview = document.getElementById("keywordPreview");
+    const quotePreview = document.getElementById("quotePreview");
+    const relationPreview = document.getElementById("relationPreview");
+    const commentPreview = document.getElementById("commentPreview");
+    const tagPreview = document.getElementById("tagPreview");
+    const platformPreview = document.getElementById("platformPreview");
+
+    function setText(input, preview, fallback) {
+      preview.textContent = input.value.trim() || fallback;
+    }
+
+    function createPills(value, target, prefix = "") {
+      const items = value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      target.innerHTML = "";
+
+      items.forEach((item) => {
+        const span = document.createElement("span");
+        span.className = target === tagPreview ? "tag" : "keyword";
+        span.textContent = prefix && !item.startsWith(prefix) ? `${prefix}${item}` : item;
+        target.appendChild(span);
+      });
+    }
+
+    function updateStyle() {
+      profileCard.classList.remove("style-classic", "style-secret", "style-status");
+      profileCard.classList.add(`style-${styleSelect.value}`);
+
+      if (styleSelect.value === "status") {
+        document.body.classList.add("theme-status-active");
+      } else {
+        document.body.classList.remove("theme-status-active");
+      }
+    }
+
+    function updateRatio() {
+      profileCard.classList.remove("ratio-square", "ratio-portrait");
+      profileCard.classList.add(`ratio-${ratioSelect.value}`);
+    }
+
+    function updateFrame() {
+      photoFrame.classList.remove("frame-rounded", "frame-square", "frame-circle");
+      photoFrame.classList.add(`frame-${frameSelect.value}`);
+    }
+
+    function updateTheme(color) {
+      profileCard.style.setProperty("--theme-color", color);
+    }
+
+    function updateImage() {
+      const file = imageInput.files[0];
+
+      if (!file) {
+        photoPreview.hidden = true;
+        photoPlaceholder.hidden = false;
+        photoPreview.removeAttribute("src");
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        photoPreview.src = reader.result;
+        photoPreview.hidden = false;
+        photoPlaceholder.hidden = true;
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function updateAllText() {
+      setText(nameInput, namePreview, "캐릭터 이름");
+      setText(subtitleInput, subtitlePreview, "짧은 부제를 입력하세요");
+      setText(captionInput, captionPreview, "프로필 캡션");
+      setText(introInput, introPreview, "캐릭터 소개를 입력하세요.");
+      setText(quoteInput, quotePreview, "캐릭터의 대표 대사를 입력하세요.");
+      setText(relationInput, relationPreview, "관계 성향을 입력하세요.");
+      setText(commentInput, commentPreview, "작가 코멘트를 입력하세요.");
+      setText(platformInput, platformPreview, "플랫폼 이름");
+      createPills(keywordInput.value, keywordPreview);
+      createPills(tagInput.value, tagPreview, "#");
+    }
+
+    async function saveAsImage() {
+      saveButton.disabled = true;
+      saveButton.textContent = "저장 중...";
+
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const canvas = await html2canvas(profileCard, {
+          backgroundColor: styleSelect.value === "status" ? "#0f131a" : "#ffffff",
+          scale: 3,
+          useCORS: true,
+          imageTimeout: 15000
+        });
+
+        const link = document.createElement("a");
+        const safeName = nameInput.value.trim().replace(/[\\/:*?"<>|]/g, "") || "character";
+        link.download = `${safeName}-profile.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      } catch (error) {
+        alert("이미지 저장에 실패했어요. 사진을 다시 첨부한 뒤 시도해보세요.");
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "이미지로 저장";
+      }
+    }
+
+    [
+      nameInput,
+      subtitleInput,
+      captionInput,
+      introInput,
+      keywordInput,
+      quoteInput,
+      relationInput,
+      commentInput,
+      tagInput,
+      platformInput
+    ].forEach((input) => {
+      input.addEventListener("input", updateAllText);
+    });
+
+    styleSelect.addEventListener("change", updateStyle);
+    ratioSelect.addEventListener("change", updateRatio);
+    frameSelect.addEventListener("change", updateFrame);
+    imageInput.addEventListener("change", updateImage);
+
+    themeInput.addEventListener("input", () => {
+      themeTextInput.value = themeInput.value;
+      updateTheme(themeInput.value);
+    });
+
+    themeTextInput.addEventListener("input", () => {
+      const color = themeTextInput.value.trim();
+
+      if (/^#[0-9a-fA-F]{6}$/.test(color)) {
+        themeInput.value = color;
+        updateTheme(color);
+      }
+    });
+
+    saveButton.addEventListener("click", saveAsImage);
+
+    updateAllText();
+    updateStyle();
+    updateRatio();
+    updateFrame();
+    updateTheme(themeInput.value);
+  </script>
+</body>
+</html>
